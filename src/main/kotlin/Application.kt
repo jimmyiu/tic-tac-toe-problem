@@ -1,21 +1,20 @@
-import dev.iuhh.tictactoe.Game
-import dev.iuhh.tictactoe.GameState
-import dev.iuhh.tictactoe.TicTacToeEngine
+
+import dev.iuhh.tictactoe.GameBoard
 
 fun main(args: Array<String>) {
   val completedGames = toGames(IncompletedGamesStr)
-  val result = completedGames
-    .mapIndexed { indexed, it -> it.cells to TicTacToeEngine.determineGameState(it) }
-    .filter { it.second != GameState.Incomplete }
+//  val result = completedGames
+//    .mapIndexed { indexed, it -> it.cells to TicTacToeEngine.determineGameState(it) }
+//    .filter { it.second != GameState.Incomplete }
 //    .groupingBy { it }
 //    .eachCount()
-  println(result)
+//  println(result)
 //  val incompletedGames = toGames(CompletedGamesStr)
 //  val whoIsNextResult = incompletedGames.map { TicTacToeEngine.determineWhoIsTheNext(it) }
 //  println(whoIsNextResult)
 }
 
-private fun toGames(str: String) = str.split(System.lineSeparator()).map { Game.of(it) }
+private fun toGames(str: String) = str.split(System.lineSeparator()).map { GameBoard.of(it) }
 const val CompletedGamesStr = """XOX=OX=O=
 XX=OOO===
 XOOOXXOXO

@@ -1,85 +1,112 @@
 package dev.iuhh.tictactoe
 
+import ArgProvider
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments.arguments
+import org.junit.jupiter.params.provider.ArgumentsSource
 import org.junit.jupiter.params.provider.CsvSource
 
 class TicTacToeEngineTest {
-  @ParameterizedTest
-  @CsvSource(
-    "OOOXX====,CircleWin",
-    "XX=OOO===,CircleWin",
-    "XX====OOO,CircleWin",
-    "XXXOO====,CrossWin",
-    "OO=XXX===,CrossWin",
-    "===OO=XXX,CrossWin",
+  @Nested
+  inner class DetermineGameStateTest {
+    @ParameterizedTest
+    @ArgumentsSource(WinByRowTestCases::class)
+    fun `given a row of the same symbol, should the symbol player win`(board: GameBoard, expected: GameState) {
+      val actual = TicTacToeEngine.determineGameState(board)
+      assertThat(actual).isEqualTo(expected)
+    }
+    @ParameterizedTest
+    @ArgumentsSource(WinByColumnTestCases::class)
+    fun `given a column of the same symbol, should the symbol player win`(board: GameBoard, expected: GameState) {
+      val actual = TicTacToeEngine.determineGameState(board)
+      assertThat(actual).isEqualTo(expected)
+    }
+    @ParameterizedTest
+    @ArgumentsSource(WinByDiagonalTestCases::class)
+    fun `given a diagonal of the same symbol, should the symbol player wins`(board: GameBoard, expected: GameState) {
+      //
+      val actual = TicTacToeEngine.determineGameState(board)
+      //
+      assertThat(actual).isEqualTo(expected)
+    }
+    @Test
+    fun `if all cells are filled but no one wins, it is a draw`() {
+      val actual = TicTacToeEngine.determineGameState(GameBoardBuilder.draw())
+      assertThat(actual).isEqualTo(GameState.Draw)
+    }
+  }
+
+  private class WinByRowTestCases : ArgProvider(
+    arguments(GameBoardBuilder.ofRows("OOO", "XX=", "==="), GameState.CircleWin),
+    arguments(GameBoardBuilder.ofRows("XX=", "OOO", "==="), GameState.CircleWin),
+    arguments(GameBoardBuilder.ofRows("XX=", "===", "OOO"), GameState.CircleWin),
+    arguments(GameBoardBuilder.ofRows("XXX", "OO=", "==="), GameState.CrossWin),
+    arguments(GameBoardBuilder.ofRows("OO=", "XXX", "==="), GameState.CrossWin),
+    arguments(GameBoardBuilder.ofRows("OO=", "===", "XXX"), GameState.CrossWin),
   )
-  fun `given a row of the same symbol, should the symbol player win`(input: String, expected: GameState) {
-    //
-    val actual = TicTacToeEngine.determineGameState(Game.of(input))
-    //
-    assertThat(actual).isEqualTo(expected)
-  }
-  @ParameterizedTest
-  @CsvSource(
-    "OXXO=XO==,CircleWin",
-    "XOX=OX=O=,CircleWin",
-    "XXO=XO==O,CircleWin",
-    "XOOX=OX==,CrossWin",
-    "OXO=XO=X=,CrossWin",
-    "OOX=OX==X,CrossWin",
+
+  private class WinByColumnTestCases : ArgProvider(
+    arguments(GameBoardBuilder.ofCols("OOO", "XX=", "==="), GameState.CircleWin),
+    arguments(GameBoardBuilder.ofCols("XX=", "OOO", "==="), GameState.CircleWin),
+    arguments(GameBoardBuilder.ofCols("XX=", "===", "OOO"), GameState.CircleWin),
+    arguments(GameBoardBuilder.ofCols("XXX", "OO=", "==="), GameState.CrossWin),
+    arguments(GameBoardBuilder.ofCols("OO=", "XXX", "==="), GameState.CrossWin),
+    arguments(GameBoardBuilder.ofCols("OO=", "===", "XXX"), GameState.CrossWin),
   )
-  fun `given a column of the same symbol, should the symbol player win`(input: String, expected: GameState) {
-    //
-    val actual = TicTacToeEngine.determineGameState(Game.of(input))
-    //
-    assertThat(actual).isEqualTo(expected)
-  }
-  @ParameterizedTest
-  @CsvSource(
-    "O===O===O,CircleWin",
-    "==O=O=O==,CircleWin",
-    "X===X===X,CrossWin",
-    "==X=X=X==,CrossWin",
+
+  private class WinByDiagonalTestCases : ArgProvider(
+    arguments(
+      GameBoardBuilder.ofRows(
+        "O==",
+        "=O=",
+        "XXO"
+      ), GameState.CircleWin
+    ),
+    arguments(
+      GameBoardBuilder.ofRows(
+        "XXO",
+        "=O=",
+        "O=="
+      ), GameState.CircleWin
+    ),
+    arguments(
+      GameBoardBuilder.ofRows(
+        "X==",
+        "=X=",
+        "OOX"
+      ), GameState.CrossWin
+    ),
+    arguments(
+      GameBoardBuilder.ofRows(
+        "OOX",
+        "=X=",
+        "X=="
+      ), GameState.CrossWin
+    ),
   )
-  fun `given a diagonal of the same symbol, should the symbol player wins`(input: String, expected: GameState) {
-    //
-    val actual = TicTacToeEngine.determineGameState(Game.of(input))
-    //
-    assertThat(actual).isEqualTo(expected)
-  }
-  @Test
-  fun `if all cells are filled but no one wins, it is a draw`() {
-    val case1 = "XXOOOXXOX";
-    //
-    val actual = TicTacToeEngine.determineGameState(Game.of(case1))
-    //
-    assertThat(actual).isEqualTo(GameState.Draw)
-  }
-  @Test
-  fun `the game can be created correctly`() {
-    val case1 = "XOX=OX=O=";
-    //
-    val game = Game.of(case1)
-    //
-    println(game)
-    assertThat(game).isEqualTo(
-      Game(
-        listOf('X', 'O', 'X', '=', 'O', 'X', '=', 'O', '=')
-      )
+  @Nested
+  inner class DetermineNextPlayerTest {
+    @ParameterizedTest
+    @CsvSource(
+      "X=X=OX=O=,O",
+      "O=O=X====,X",
     )
-  }
-  // determine who is next
-  @ParameterizedTest
-  @CsvSource(
-    "X=X=OX=O=,O",
-    "XX=OO====,X",
-  )
-  fun `the one with fewer move is the next one to move`(input: String, expected: Char) {
-    //
-    val actual = TicTacToeEngine.determineWhoIsTheNext(Game.of(input))
-    //
-    assertThat(actual).isEqualTo(expected)
+    fun `the one with fewer move is the next one to move`(input: String, expected: Char) {
+      val actual = TicTacToeEngine.determineWhoIsTheNext(GameBoard.of(input))
+      assertThat(actual).isEqualTo(expected)
+    }
+    @Test
+    fun `given number of moves of the two players are the same, return the first player (X)`() {
+      val game = GameBoardBuilder.ofRows(
+        "OO=",
+        "===",
+        "XX=",
+      )
+      val actual = TicTacToeEngine.determineWhoIsTheNext(game)
+      assertThat(actual).isEqualTo(Cross)
+    }
   }
 }
