@@ -17,7 +17,6 @@ object TicTacToeEngine {
 
   fun GameBoard.determineNextWinningMoveOf(symbol: Char) =
     WinningPattern.entries
-      .also { println(this) }
       .map { pattern -> this.canWinByMove(pattern, symbol) }
       .filterNot { it == Move.NotAvailable }
       .distinct()
@@ -25,7 +24,6 @@ object TicTacToeEngine {
   private fun GameBoard.canWinByMove(pattern: WinningPattern, symbol: Char): Move {
     val symbols = this.getBy(pattern)
     val emptyPosition = symbols.indexOf(Empty)
-    println("pattern=$pattern, symbols=$symbols")
     return if (emptyPosition >= 0 && symbols.count(symbol) == 2) {
       Move.ofPosition(pattern.positions[emptyPosition])
     } else {
