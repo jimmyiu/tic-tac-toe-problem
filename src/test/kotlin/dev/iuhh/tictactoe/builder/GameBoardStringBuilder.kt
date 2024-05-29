@@ -1,4 +1,4 @@
-package dev.iuhh.tictactoe
+package dev.iuhh.tictactoe.builder
 
 object GameBoardStringBuilder {
   fun ofRows(row1: String = DEFAULT_VALUE, row2: String = DEFAULT_VALUE, row3: String = DEFAULT_VALUE) =

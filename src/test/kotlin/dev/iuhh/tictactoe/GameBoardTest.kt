@@ -1,6 +1,8 @@
 package dev.iuhh.tictactoe
 
 import ArgProvider
+import dev.iuhh.tictactoe.builder.GameBoardBuilder
+import dev.iuhh.tictactoe.builder.GameBoardStringBuilder
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchException
 import org.junit.jupiter.api.Test
@@ -13,7 +15,7 @@ import org.junit.jupiter.params.provider.ValueSource
 class GameBoardTest {
   @ParameterizedTest
   @ValueSource(strings = ["XO=", "XX==1==OO"])
-  fun `this game cannot be created if the given string format is invalid`(invalidString: String) {
+  fun `given invalid string format, this game cannot be created`(invalidString: String) {
     // when
     val exception = catchException {
       GameBoard.of(invalidString)
@@ -24,7 +26,7 @@ class GameBoardTest {
   }
   @ParameterizedTest
   @ArgumentsSource(ValidGameBoardStringTestCases::class)
-  fun `the game can be created correctly by given string representation`(gameBoardInString: String) {
+  fun `given valid string representation, the game can be created with expected cell symbols`(gameBoardInString: String) {
     // when
     val game = GameBoard.of(gameBoardInString)
     // then
@@ -47,6 +49,16 @@ class GameBoardTest {
   fun `getRow should return expected row of the game board`() {
     val actual = GameBoardBuilder.default().getRow(1)
     assertThat(actual).containsExactly(Empty, Cross, Empty)
+  }
+  @Test
+  fun `getDiagonalFromTopLeft should return expected symbols`() {
+    val actual = GameBoardBuilder.default().getDiagonalFromTopLeft()
+    assertThat(actual).containsExactly(Circle, Cross, Empty)
+  }
+  @Test
+  fun `getDiagonalFromTopRight should return expected symbols`() {
+    val actual = GameBoardBuilder.default().getDiagonalFromTopRight()
+    assertThat(actual).containsExactly(Empty, Cross, Circle)
   }
   @ParameterizedTest
   @CsvSource(

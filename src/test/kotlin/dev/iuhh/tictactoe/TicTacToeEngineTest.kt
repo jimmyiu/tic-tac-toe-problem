@@ -1,6 +1,7 @@
 package dev.iuhh.tictactoe
 
 import ArgProvider
+import dev.iuhh.tictactoe.builder.GameBoardBuilder
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -33,9 +34,14 @@ class TicTacToeEngineTest {
       assertThat(actual).isEqualTo(expected)
     }
     @Test
-    fun `if all cells are filled but no one wins, it is a draw`() {
+    fun `given all cells are filled but no one wins, should return Draw`() {
       val actual = TicTacToeEngine.determineGameState(GameBoardBuilder.draw())
       assertThat(actual).isEqualTo(GameState.Draw)
+    }
+    @Test
+    fun `given no one wins and the game board has not been filled up, should return Incomplete`() {
+      val actual = TicTacToeEngine.determineGameState(GameBoardBuilder.incomplete())
+      assertThat(actual).isEqualTo(GameState.Incomplete)
     }
   }
 
@@ -95,7 +101,7 @@ class TicTacToeEngineTest {
       "O=O=X====,X",
     )
     fun `the one with fewer move is the next one to move`(input: String, expected: Char) {
-      val actual = TicTacToeEngine.determineWhoIsTheNext(GameBoard.of(input))
+      val actual = TicTacToeEngine.determineNextPlayer(GameBoard.of(input))
       assertThat(actual).isEqualTo(expected)
     }
     @Test
@@ -105,7 +111,7 @@ class TicTacToeEngineTest {
         "===",
         "XX=",
       )
-      val actual = TicTacToeEngine.determineWhoIsTheNext(game)
+      val actual = TicTacToeEngine.determineNextPlayer(game)
       assertThat(actual).isEqualTo(Cross)
     }
   }

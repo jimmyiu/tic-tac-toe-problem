@@ -1,4 +1,6 @@
-package dev.iuhh.tictactoe
+package dev.iuhh.tictactoe.builder
+
+import dev.iuhh.tictactoe.GameBoard
 
 object GameBoardBuilder {
   /**
@@ -28,6 +30,21 @@ object GameBoardBuilder {
     GameBoardStringBuilder.ofRows(
       "XXO",
       "OOX",
+      "XOX"
+    )
+  )
+  /**
+   * Returns an incomplete state game board of:
+   * ```
+   * XXO
+   * OO=
+   * XOX
+   * ```
+   */
+  fun incomplete() = GameBoard.of(
+    GameBoardStringBuilder.ofRows(
+      "XXO",
+      "OO=",
       "XOX"
     )
   )
