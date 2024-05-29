@@ -8,28 +8,46 @@ import org.junit.jupiter.params.provider.CsvSource
 class TicTacToeEngineTest {
   @ParameterizedTest
   @CsvSource(
-    "XOX=OX=O=,CircleWin",
-    "OXO=XO=X=,CrossWin",
+    "OOOXX====,CircleWin",
     "XX=OOO===,CircleWin",
+    "XX====OOO,CircleWin",
+    "XXXOO====,CrossWin",
     "OO=XXX===,CrossWin",
+    "===OO=XXX,CrossWin",
+  )
+  fun `given a row of the same symbol, should the symbol player win`(input: String, expected: GameState) {
+    //
+    val actual = TicTacToeEngine.determineGameState(Game.of(input))
+    //
+    assertThat(actual).isEqualTo(expected)
+  }
+  @ParameterizedTest
+  @CsvSource(
+    "OXXO=XO==,CircleWin",
+    "XOX=OX=O=,CircleWin",
+    "XXO=XO==O,CircleWin",
+    "XOOX=OX==,CrossWin",
+    "OXO=XO=X=,CrossWin",
+    "OOX=OX==X,CrossWin",
+  )
+  fun `given a column of the same symbol, should the symbol player win`(input: String, expected: GameState) {
+    //
+    val actual = TicTacToeEngine.determineGameState(Game.of(input))
+    //
+    assertThat(actual).isEqualTo(expected)
+  }
+  @ParameterizedTest
+  @CsvSource(
     "O===O===O,CircleWin",
     "==O=O=O==,CircleWin",
     "X===X===X,CrossWin",
     "==X=X=X==,CrossWin",
   )
-  fun `someone wins`(input: String, state: GameState) {
+  fun `given a diagonal of the same symbol, should the symbol player wins`(input: String, expected: GameState) {
     //
     val actual = TicTacToeEngine.determineGameState(Game.of(input))
     //
-    assertThat(actual).isEqualTo(state)
-  }
-  @Test
-  fun `a row with the same symbol wins`() {
-    val case1 = "XOX=OX=O=";
-    //
-    val actual = TicTacToeEngine.determineGameState(Game.of(case1))
-    //
-    assertThat(actual).isEqualTo(GameState.CircleWin)
+    assertThat(actual).isEqualTo(expected)
   }
   @Test
   fun `if all cells are filled but no one wins, it is a draw`() {
@@ -52,7 +70,6 @@ class TicTacToeEngineTest {
       )
     )
   }
-
   // determine who is next
   @ParameterizedTest
   @CsvSource(

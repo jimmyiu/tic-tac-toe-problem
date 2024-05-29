@@ -2,17 +2,16 @@ package dev.iuhh.tictactoe
 
 object TicTacToeEngine {
   fun determineGameState(game: Game): GameState {
-    if (game.isEntireColContains(Circle) || game.isEntireRowContains(Circle) || game.isEntireDiagonalContains(Circle)) {
-      return GameState.CircleWin
-    }
-    if (game.isEntireColContains(Cross) || game.isEntireRowContains(Cross) || game.isEntireDiagonalContains(Cross)) {
-      return GameState.CrossWin
-    }
-    if (game.isAllCellFilled()) {
-      return GameState.Draw
-    }
+    // TODO #2 Handle both winners win
+    println(game)
+    if (game.isWinningBy(Circle)) return GameState.CircleWin
+    if (game.isWinningBy(Cross)) return GameState.CrossWin
+    if (game.isAllCellFilled()) return GameState.Draw
     return GameState.Incomplete
   }
+
+  private fun Game.isWinningBy(player: Char) =
+    isEntireColContains(player) || isEntireRowContains(player) || isEntireDiagonalContains(player)
 
   fun determineWhoIsTheNext(game: Game): Char {
     val numOfCross = game.cells.count { it == Cross }
@@ -40,8 +39,8 @@ object TicTacToeEngine {
 
   private fun Game.isEntireDiagonalContains(char: Char): Boolean {
     // TODO: give a better name
-    val fromTopLeft = listOf(this.getCell(0, 0), this.getCell(1, 1), this.getCell(2, 2)).all { it == char }
-    val fromTopRight = listOf(this.getCell(0, 2), this.getCell(1, 1), this.getCell(2, 0)).all { it == char }
+    val fromTopLeft = listOf(this[0, 0], this[1, 1], this[2, 2]).all { it == char }
+    val fromTopRight = listOf(this[0, 2], this[1, 1], this[2, 0]).all { it == char }
     return fromTopRight || fromTopLeft
   }
 
@@ -59,25 +58,4 @@ enum class GameState {
   CircleWin,
   Draw,
   Incomplete,
-}
-
-data class Game(
-  val cells: List<Char>,
-) {
-  fun getCell(row: Int, col: Int): Char {
-    return this.cells[row * 3 + col]
-  }
-
-  fun getCol(col: Int) =
-    listOf(this.getCell(0, col), this.getCell(1, col), this.getCell(2, col))
-
-  fun getRow(row: Int) =
-    listOf(this.getCell(row, 0), this.getCell(row, 1), this.getCell(row, 2))
-
-  companion object {
-    fun of(input: String): Game {
-      // assuming that input is always having length == 9
-      return Game(input.toCharArray().toList())
-    }
-  }
 }
