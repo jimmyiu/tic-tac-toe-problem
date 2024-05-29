@@ -15,27 +15,29 @@ object TicTacToeEngine {
     else Cross
   }
 
-  private fun GameBoard.isWonBy(symbol: Char) =
-    isEntireColContains(symbol)
-        || isEntireRowContains(symbol)
-        || isEntireDiagonalContains(symbol)
+  fun GameBoard.determineNextWinningMoveOf(symbol: Char) =
+    WinningPattern.entries
+      .also { println(this) }
+      .map { pattern -> this.canWinByMove(pattern, symbol) }
+      .filterNot { it == Move.NotAvailable }
+      .distinct()
 
-  private fun GameBoard.isEntireColContains(symbol: Char) =
-    getCol(0).allAre(symbol)
-        || getCol(1).allAre(symbol)
-        || getCol(2).allAre(symbol)
-
-  private fun GameBoard.isEntireRowContains(symbol: Char) =
-    getRow(0).allAre(symbol)
-        || getRow(1).allAre(symbol)
-        || getRow(2).allAre(symbol)
-
-  private fun GameBoard.isEntireDiagonalContains(symbol: Char): Boolean {
-    return getDiagonalFromTopLeft().allAre(symbol)
-        || getDiagonalFromTopRight().allAre(symbol)
+  private fun GameBoard.canWinByMove(pattern: WinningPattern, symbol: Char): Move {
+    val symbols = this.getBy(pattern)
+    val emptyPosition = symbols.indexOf(Empty)
+    println("pattern=$pattern, symbols=$symbols")
+    return if (emptyPosition >= 0 && symbols.count(symbol) == 2) {
+      Move.ofPosition(pattern.positions[emptyPosition])
+    } else {
+      Move.NotAvailable
+    }
   }
 
+  private fun GameBoard.isWonBy(symbol: Char) =
+    WinningPattern.entries.any { getBy(it).allAre(symbol) }
+
   private fun List<Char>.allAre(char: Char) = all { it == char }
+  private fun List<Char>.count(char: Char) = count { it == char }
   private fun GameBoard.isDrawGame() = this.count(Empty) == 0 // because we determined the winner before this call
 }
 

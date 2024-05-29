@@ -48,6 +48,36 @@ object GameBoardBuilder {
       "XOX"
     )
   )
+  /**
+   * Returns a draw state game board of:
+   * ```
+   * XXO
+   * XOX
+   * OOX
+   * ```
+   */
+  fun circleWins() = GameBoard.of(
+    GameBoardStringBuilder.ofRows(
+      "XXO",
+      "XOX",
+      "OOX"
+    )
+  )
+  /**
+   * Returns a draw state game board of:
+   * ```
+   * XOO
+   * XXX
+   * OOX
+   * ```
+   */
+  fun crossWins() = GameBoard.of(
+    GameBoardStringBuilder.ofRows(
+      "XOO",
+      "XXX",
+      "OOX"
+    )
+  )
 
   fun ofRows(row1: String, row2: String, row3: String) =
     GameBoard.of(GameBoardStringBuilder.ofRows(row1, row2, row3))

@@ -1,19 +1,18 @@
 package dev.iuhh.tictactoe
 
+import dev.iuhh.tictactoe.WinningPattern.*
+
 data class GameBoard(
   private val cells: String,
 ) {
   operator fun get(row: Int, col: Int) = this.cells[row * 3 + col]
-  fun getCol(col: Int) = (0..2).map { this[it, col] }
-  fun getRow(row: Int) = (0..2).map { this[row, it] }
-  fun getDiagonalFromTopLeft() = (0..2).map { this[it, it] }
-  fun getDiagonalFromTopRight() = (0..2).map { this[it, 2 - it] }
+  fun getBy(pattern: WinningPattern) = listOf(cells[pattern.positions[0]], cells[pattern.positions[1]], cells[pattern.positions[2]])
   fun count(symbol: Char) = this.cells.count { it == symbol }
   override fun toString(): String {
     return """
-      ${getRow(0)}
-      ${getRow(1)}
-      ${getRow(2)}
+      ${getBy(Row1)}
+      ${getBy(Row2)}
+      ${getBy(Row3)}
     """.trimIndent()
   }
 
