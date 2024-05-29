@@ -23,8 +23,12 @@ fun printIncompleteGamesAnalysis() {
     }
   }
   result.forEachIndexed { index, obj ->
-    println("Case ${index + 1}), game state = ${obj.state}")
-    if (obj.state != GameState.Incomplete) println(obj.board)
+    print("Case ${index + 1}), game state = ${obj.state}")
+    if (obj.state != GameState.Incomplete) println(System.lineSeparator() + obj.board)
+    else {
+      val nextMove = TicTacToeEngine.determineNextPlayer(obj.board)
+      println(", next player is ($nextMove)")
+    }
   }
 }
 

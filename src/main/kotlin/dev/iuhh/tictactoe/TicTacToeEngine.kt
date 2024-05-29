@@ -1,17 +1,19 @@
 package dev.iuhh.tictactoe
 
 object TicTacToeEngine {
-  fun determineGameState(game: GameBoard): GameState {
+  fun determineGameState(board: GameBoard): GameState {
     // TODO #2 Handle both players win
-    return if (game.isWonBy(Circle)) GameState.CircleWin
-    else if (game.isWonBy(Cross)) GameState.CrossWin
-    else if (game.isDrawGame()) GameState.Draw
+    return if (board.isWonBy(Circle)) GameState.CircleWin
+    else if (board.isWonBy(Cross)) GameState.CrossWin
+    else if (board.isDrawGame()) GameState.Draw
     else GameState.Incomplete
   }
 
-  fun determineNextPlayer(game: GameBoard) =
-    if (game.count(Circle) < game.count(Cross)) Circle
+  fun determineNextPlayer(board: GameBoard): Char {
+    check(board.isDrawGame().not()) { "no more move is allowed" }
+    return if (board.count(Circle) < board.count(Cross)) Circle
     else Cross
+  }
 
   private fun GameBoard.isWonBy(symbol: Char) =
     isEntireColContains(symbol)

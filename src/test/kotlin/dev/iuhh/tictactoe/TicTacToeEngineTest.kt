@@ -3,6 +3,7 @@ package dev.iuhh.tictactoe
 import ArgProvider
 import dev.iuhh.tictactoe.builder.GameBoardBuilder
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.catchException
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -100,12 +101,15 @@ class TicTacToeEngineTest {
       "X=X=OX=O=,O",
       "O=O=X====,X",
     )
-    fun `the one with fewer move is the next one to move`(input: String, expected: Char) {
+    fun `given an incomplete game, should return the one with fewer move as the next player`(
+      input: String,
+      expected: Char
+    ) {
       val actual = TicTacToeEngine.determineNextPlayer(GameBoard.of(input))
       assertThat(actual).isEqualTo(expected)
     }
     @Test
-    fun `given number of moves of the two players are the same, return the first player (X)`() {
+    fun `given an incomplete game, and number of moves of the two players are the same, should return the first player (X)`() {
       val game = GameBoardBuilder.ofRows(
         "OO=",
         "===",
@@ -113,6 +117,13 @@ class TicTacToeEngineTest {
       )
       val actual = TicTacToeEngine.determineNextPlayer(game)
       assertThat(actual).isEqualTo(Cross)
+    }
+    @Test
+    fun `given a draw game, should throw exception as no next player is available`() {
+      val exception = catchException { TicTacToeEngine.determineNextPlayer(GameBoardBuilder.draw()) }
+      assertThat(exception)
+        .isInstanceOf(IllegalStateException::class.java)
+        .hasMessage("no more move is allowed")
     }
   }
 }
