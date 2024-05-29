@@ -2,7 +2,7 @@ package dev.iuhh.tictactoe.builder
 
 import dev.iuhh.tictactoe.GameBoard
 
-object GameBoardBuilder {
+internal object GameBoardBuilder {
   /**
    * Returns a default valid game board of:
    * ```

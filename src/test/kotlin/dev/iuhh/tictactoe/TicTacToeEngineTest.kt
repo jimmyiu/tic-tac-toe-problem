@@ -1,7 +1,7 @@
 package dev.iuhh.tictactoe
 
 import ArgProvider
-import dev.iuhh.tictactoe.TicTacToeEngine.determineNextWinningMoveOf
+
 import dev.iuhh.tictactoe.builder.GameBoardBuilder
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchException
@@ -132,7 +132,7 @@ class TicTacToeEngineTest {
     @ParameterizedTest
     @ArgumentsSource(DetermineNextWinningMoveOfCompleteGameTestCases::class)
     fun `given a board is a complete game, should return empty list`(board: GameBoard, symbol: Char) {
-      val actual = board.determineNextWinningMoveOf(symbol)
+      val actual = TicTacToeEngine.determineNextWinningMoveOf(board, symbol)
       assertThat(actual).hasSize(0)
     }
     @ParameterizedTest
@@ -142,7 +142,7 @@ class TicTacToeEngineTest {
       symbol: Char,
       expected: List<Move>
     ) {
-      val actual = board.determineNextWinningMoveOf(symbol)
+      val actual = TicTacToeEngine.determineNextWinningMoveOf(board, symbol)
       assertThat(actual).containsExactlyInAnyOrderElementsOf(expected)
     }
   }

@@ -15,20 +15,18 @@ object TicTacToeEngine {
     else Cross
   }
 
-  fun GameBoard.determineNextWinningMoveOf(symbol: Char) =
+  fun determineNextWinningMoveOf(board: GameBoard, symbol: Char) =
     WinningPattern.entries
-      .map { pattern -> this.canWinByMove(pattern, symbol) }
+      .map { pattern -> board.canWinByMove(pattern, symbol) }
       .filterNot { it == Move.NotAvailable }
       .distinct()
 
   private fun GameBoard.canWinByMove(pattern: WinningPattern, symbol: Char): Move {
-    val symbols = this.getBy(pattern)
-    val emptyPosition = symbols.indexOf(Empty)
-    return if (emptyPosition >= 0 && symbols.count(symbol) == 2) {
-      Move.ofPosition(pattern.positions[emptyPosition])
-    } else {
-      Move.NotAvailable
-    }
+    val currentSymbols = this.getBy(pattern)
+    val emptyIndex = currentSymbols.indexOf(Empty)
+    val potentialWinningPosition =
+      if (emptyIndex >= 0 && currentSymbols.count(symbol) == 2) pattern.positions[emptyIndex] else -1
+    return Move.ofPosition(potentialWinningPosition)
   }
 
   private fun GameBoard.isWonBy(symbol: Char) =

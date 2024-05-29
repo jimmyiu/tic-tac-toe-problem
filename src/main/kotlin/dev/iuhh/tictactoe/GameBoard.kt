@@ -2,7 +2,7 @@ package dev.iuhh.tictactoe
 
 import dev.iuhh.tictactoe.WinningPattern.*
 
-data class GameBoard(
+data class GameBoard private constructor(
   private val cells: String,
 ) {
   operator fun get(row: Int, col: Int) = this.cells[row * 3 + col]

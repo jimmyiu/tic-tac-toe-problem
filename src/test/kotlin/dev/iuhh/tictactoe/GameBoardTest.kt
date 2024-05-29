@@ -44,7 +44,7 @@ class GameBoardTest {
     "X,3",
     "O,2",
   )
-  fun `count should return the number of symbol in the game board`(symbol: Char, expected: Int) {
+  fun `count should return the number of symbols in the game board`(symbol: Char, expected: Int) {
     // given
     val board = GameBoardBuilder.ofRows(
       "XOX",
@@ -67,7 +67,10 @@ class GameBoardTest {
     "DiagonalTopLeft,XOX",
     "DiagonalTopRight,OOX",
   )
-  fun `getBy should return the symbols of the given pattern`(pattern: WinningPattern, expected: String) {
+  fun `getBy should return the game board current symbols of the given pattern`(
+    pattern: WinningPattern,
+    expected: String
+  ) {
     val actual = GameBoardBuilder.incomplete().getBy(pattern)
     assertThat(actual).containsExactlyElementsOf(expected.toList())
   }
