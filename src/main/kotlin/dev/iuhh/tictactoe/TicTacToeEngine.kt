@@ -3,8 +3,6 @@ package dev.iuhh.tictactoe
 object TicTacToeEngine {
   fun determineGameState(game: GameBoard): GameState {
     // TODO #2 Handle both players win
-    println("game board:")
-    println(game)
     return if (game.isWonBy(Circle)) GameState.CircleWin
     else if (game.isWonBy(Cross)) GameState.CrossWin
     else if (game.isDrawGame()) GameState.Draw

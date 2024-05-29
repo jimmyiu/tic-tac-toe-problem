@@ -14,7 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource
 
 class GameBoardTest {
   @ParameterizedTest
-  @ValueSource(strings = ["XO=", "XX==1==OO"])
+  @ValueSource(strings = ["XO=", "XX==1==OO", "===XXXOOO="])
   fun `given invalid string format, this game cannot be created`(invalidString: String) {
     // when
     val exception = catchException {

@@ -19,8 +19,12 @@ data class GameBoard(
 
   companion object {
     fun of(gameBoardInString: String): GameBoard {
-      check(gameBoardInString.length == 9)
-      check(gameBoardInString.all { ValidSymbols.contains(it) })
+      check(gameBoardInString.length == 9) {
+        "The game board string length != 9, game board = $gameBoardInString"
+      }
+      check(gameBoardInString.all { ValidSymbols.contains(it) }) {
+        "The game board string contains invalid symbol, game board = $gameBoardInString"
+      }
       return GameBoard(gameBoardInString)
     }
   }
